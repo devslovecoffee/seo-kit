@@ -7,7 +7,7 @@ Writer-specific companion to `skills/blog/references/blog-delivery-contract.md`.
 1. Capability discovery and hero:
    - Run `python3 scripts/blog_preflight.py --draft <folder> --gate 1`.
    - If a valid local hero already exists, keep it.
-   - If generation is needed, use `blog-image` or `python3 scripts/generate_hero.py --topic "<title>" --tags "<tags>" --out <folder>`.
+   - If generation is needed, use the `blog-openai-image` skill (`--size 1216x640`, resize to 1200x630, save as `<folder>/hero.png`).
    - Record provider, model ID, prompt, license, and attribution.
 2. Format completeness:
    - Run `python3 scripts/blog_render.py --md <slug>.md --out-dir <folder>`.

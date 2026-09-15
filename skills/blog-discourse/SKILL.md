@@ -27,7 +27,7 @@ Adapted from the methodology of `last30days-skill` (Matt Van Horn, MIT, https://
 
 | Command | Purpose |
 |---|---|
-| `/blog discourse <topic>` | Produce a discourse brief at project-root `DISCOURSE.md` |
+| `/blog discourse <topic>` | Produce a discourse brief at project-root `DISCOURSE.md` (`seo-strategy/DISCOURSE.md` when the project has `seo-strategy/`) |
 | `/blog discourse <topic> --days 90` | Widen the freshness window from 30 to 90 days |
 | `/blog discourse <topic> --input results.json` | Skip search; build the brief from a pre-gathered results file. The flag name matches `scripts/discourse_research.py --input` directly. |
 | `/blog discourse <topic> --output path.md` | Write markdown to a chosen output path and print structured JSON without markdown to stdout. |

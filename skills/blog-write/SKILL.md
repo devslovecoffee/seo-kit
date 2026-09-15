@@ -54,6 +54,20 @@ For a deeper surface-by-surface workflow, see
 
 ### Phase 1: Topic Understanding
 
+0. **Check the project content strategy** - If the prompt already carries a
+   `=== CLUSTER CONTEXT ===` block, use it and skip this step. Otherwise, if
+   the project root has `seo-strategy/`, look the topic up per
+   `skills/blog/references/content-strategy.md`:
+   - **Match, target file missing**: the entry supplies primary and secondary
+     keywords, template, word count, slug, links, and gate. Skip the keyword and
+     template questions and Phase 1.5 auto-detection. Follow the reference for
+     internal links, the draft folder, and where the final file goes.
+   - **Match, target file exists**: the post is already published. Stop and
+     tell the user to run `/blog rewrite <file>`.
+   - **No match**: tell the user the topic is not in the strategy and ask
+     whether to add an entry first or write off-strategy.
+   - **Match in a draft cluster**: tell the user the cluster is a draft. Ask
+     whether to activate it first or write against the draft entry anyway.
 1. **Clarify the topic** - If the user provides just a topic, ask:
    - Target audience (who is this for?)
    - Primary keyword / search intent
@@ -104,8 +118,7 @@ Spawn a `blog-researcher` agent (or do inline research with WebSearch):
    - Download approved assets into the draft folder, store attribution, and never hotlink arbitrary CDN URLs
    - Reject `javascript:`, `data:`, and `file:` image URLs
    - Target dimensions: 1200x630 (OG-compatible) or 1920x1080
-   - Or generate a custom SVG cover via `blog-chart` (text-on-gradient with key stat)
-   - Or generate a custom AI image via `blog-image`; prefer `gemini-3.1-flash-image`, then `gemini-3.1-flash-lite-image` or `gemini-3-pro-image` when available, and record the model ID
+   - Or generate a cover with the `blog-openai-image` skill (`--size 1216x640`, then resize to 1200x630) and record the model ID
    - See `skills/blog/references/visual-media.md` for cover image sizing details
 3. **Find 3-5 inline images** from open-source platforms:
    - Use official APIs or Openverse search; keep license, creator, source URL, and retrieval date with each asset
@@ -114,10 +127,10 @@ Spawn a `blog-researcher` agent (or do inline research with WebSearch):
 4. **Plan 2-4 data visualizations** from researched statistics
    - Select diverse chart types (see `skills/blog/references/visual-media.md`)
    - Map data points to chart formats
-5. **AI image generation** (optional, if `blog-image` is available):
-   - If stock photo results are insufficient (< 3 good matches) or topic is too niche
-   - Generate custom hero image and/or inline illustrations via `blog-image` sub-skill
-   - Record prompt, provider, and model ID; stock photos remain available, but original and data visuals are preferred when they better serve the topic
+5. **Generated images and diagrams** (via the `blog-openai-image` skill):
+   - Use it for generated covers, illustrations, and concept or process diagrams, following its generate, view, and re-prompt loop
+   - Keep `blog-chart` for charts that encode numbers, and real screenshots for product UI (see Visual Assets in `skills/blog/SKILL.md`)
+   - Record the prompt and model ID; stock photos remain available, but original and data visuals are preferred when they better serve the topic
 6. **NotebookLM research** (optional, if user has relevant notebooks):
    - If the user mentions a NotebookLM notebook or the topic aligns with a configured notebook
    - Query via `blog-notebooklm` for source-grounded data from user-uploaded documents
@@ -361,6 +374,11 @@ Example:
 For a deeper dive into keyword clustering, see our
 [INTERNAL-LINK: complete guide to keyword clustering → pillar page on keyword research methodology].
 ```
+
+With a content-strategy entry, the entry's `links_to` defines the required
+links: link published targets by their `url` and use
+`[INTERNAL-LINK: <anchor> -> <url>]` for planned ones (see
+`skills/blog/references/content-strategy.md`).
 
 Target 5-10 internal link zones per 2,000-word post. Use descriptive anchor text
 (never "click here" or "read more"). See `skills/blog/references/internal-linking.md` for

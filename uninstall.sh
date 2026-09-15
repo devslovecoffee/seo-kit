@@ -16,7 +16,7 @@ main() {
         "blog-multilingual" "blog-notebooklm" "blog-outline" "blog-persona"
         "blog-repurpose" "blog-rewrite" "blog-schema" "blog-seo-check"
         "blog-strategy" "blog-style" "blog-taxonomy" "blog-translate"
-        "blog-write"
+        "blog-write" "blog-openai-image"
     )
     local helper_scripts=(
         "analyze_blog.py" "blog_preflight.py" "blog_render.py" "blog_hygiene.py" "cognitive_load.py"
@@ -24,7 +24,7 @@ main() {
         "lint_prose.py" "sync_flow.py"
         "ai_citation_score.py" "content_decay.py" "quality_gate.py" "style_learn.py"
         "check_google_currentness.py" "check_secrets.py" "consistency_check.py" "dependency_smoke.py"
-        "sync_google_updates.py" "validate_public_release.py"
+        "sync_google_updates.py" "validate_public_release.py" "validate_content_strategy.py"
     )
     local agent_files=(
         "blog-researcher.md" "blog-reviewer.md" "blog-seo.md"

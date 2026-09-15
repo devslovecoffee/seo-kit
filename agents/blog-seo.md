@@ -21,6 +21,12 @@ Audit blog posts for SEO compliance. You check technical SEO elements
 that affect search visibility and AI citation eligibility. You do not
 rewrite content. You identify issues and prescribe fixes.
 
+When the orchestrator supplies a content-strategy entry (id, primary and
+secondary keywords, slug, URL, required internal links), check the title, H1,
+meta description, URL, and internal links against that target instead of
+inferring the post's keyword. Report drift from the entry as a FAIL that
+names the entry id.
+
 ## Validation Checklist
 
 ### 1. Title Tag

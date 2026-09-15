@@ -37,6 +37,19 @@ rewrite work, see `/blog flow optimize`.
 
 ### Phase 1: Audit (Read-Only)
 
+0. **Check the project content strategy** - If the project root has
+   `seo-strategy/`, look this file up per
+   `skills/blog/references/content-strategy.md`:
+   - **Match**: the entry is the rewrite target. Use its primary keyword instead
+     of inferring one in step 5. Audit the post against its secondary keywords,
+     template, cluster role, `links_to`, and `gate`, and report drift (for
+     example, the post currently targets a different keyword or lacks required
+     links). Keep the file path, slug, and URL unchanged.
+   - **No match**: tell the user the post is off-strategy. Ask whether to map it
+     to an entry (add or edit one) or rewrite with an inferred keyword.
+   - **Match in a draft cluster**: tell the user the entry is in a draft
+     cluster. Ask whether to activate the cluster or rewrite against the draft
+     entry anyway.
 1. **Read the blog post** - Detect format (MDX, markdown, HTML)
 2. **Run the quality checklist** against `skills/blog/references/quality-scoring.md`:
    - Count fabricated vs sourced statistics
@@ -84,6 +97,9 @@ rewrite work, see `/blog flow optimize`.
    - If present, check: lazy loading? aria-labels? noscript fallback? VideoObject schema?
 5. **Cannibalization check**:
    - Identify the post's primary keyword from title, H1, and first paragraph
+     (with a strategy entry, use the entry's primary keyword)
+   - With a strategy, also compare against every entry's primary keyword,
+     including planned posts, and name the competing entry ids
    - Search the blog directory for other posts targeting the same keyword:
      - Grep headings and meta descriptions across all blog posts
      - Flag any posts with significant keyword overlap
@@ -109,7 +125,7 @@ Wait for user approval before proceeding.
    - Prefer original screenshots, product visuals, diagrams, or data graphics when available
    - For stock, use official provider APIs such as Openverse, Unsplash, Pexels, or Pixabay so license, creator, source URL, and download URL are captured
    - Download approved assets locally, store attribution, and reject `javascript:`, `data:`, and `file:` URLs
-   - If `blog-image` is available, offer AI generation for missing or insufficient images and record the selected model ID
+   - Offer generation with the `blog-openai-image` skill for missing or insufficient images and diagrams, and record the model ID
 4. **Plan charts** if post has fewer than 2:
    - Identify data suitable for visualization
    - Select diverse chart types
@@ -133,7 +149,8 @@ Apply changes in this order:
 - Keep the author's voice and unique perspective
 - Preserve original insights and first-hand experience
 - Keep existing quality images and charts
-- Maintain internal links
+- Maintain internal links, and add the strategy entry's `links_to` links as
+  described in `skills/blog/references/content-strategy.md`
 
 #### 4b. Fix Frontmatter
 - Update `lastUpdated` only when the rewrite materially changes facts, methods, or recommendations
@@ -142,8 +159,7 @@ Apply changes in this order:
   visible content
 - Add `coverImage` + `coverImageAlt` + `ogImage` if missing
   - Search Pixabay/Unsplash/Pexels for wide hero image (1200x630)
-  - Or generate custom SVG cover via `blog-chart` (text-on-gradient with key stat)
-  - Or generate custom AI image via `blog-image` sub-skill when available; record the model ID
+  - Or generate a cover with the `blog-openai-image` skill; record the model ID
 - Verify tags/categories are appropriate
 
 #### 4c. Apply Purpose-First Formatting
@@ -169,7 +185,7 @@ context each claim needs. Do not force statistics or word bands.
 #### 4g. Add Visual Elements
 - Embed new images after H2 headings, spaced evenly
 - Embed charts within relevant sections
-- If `blog-image` is available: generate custom images for sections lacking good stock matches, prefer the current image model registry, and record the model ID
+- Generate images and concept or process diagrams with the `blog-openai-image` skill, viewing each result and re-prompting until it passes; record the model ID. Replace hand-drawn inline SVG diagrams the same way, and keep `blog-chart` for charts that encode numbers
 - Adapt embed format to detected platform (MDX vs markdown vs HTML)
 
 #### 4h. Add Video Embeds
@@ -313,6 +329,9 @@ After rewriting, verify all quality gates pass:
 - Sentence-length variation: [descriptive observation]
 - These observations do not infer authorship and do not affect the score.
 
+### Strategy
+- [Entry id and primary keyword / off-strategy]; drift fixed: [list]; gate to confirm before publishing: [gate or none]
+
 ### Cannibalization
 - [Status: none found / flagged N posts / resolved]
 
@@ -342,6 +361,8 @@ After rewriting, verify all quality gates pass:
 ## Phase 5.5: Delivery Contract Enforcement (v1.9.0)
 
 Before presenting the rewritten draft, run the 5-gate delivery contract per `skills/blog/references/blog-delivery-contract.md`. The contract applies to rewrites the same way it applies to new posts: the user is never the first reviewer.
+
+With a content-strategy entry, the draft folder is `seo-strategy/drafts/<slug>/`. Pass the entry's keywords, URL, and `gate` to `blog-seo` and `blog-reviewer`. Write the final markdown back to the original file only after all gates pass (see `skills/blog/references/content-strategy.md`).
 
 Steps:
 

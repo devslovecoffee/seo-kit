@@ -48,6 +48,18 @@ If only a topic is given, infer the rest from context.
 
 ### Step 2: Keyword Research
 
+If the project root has `seo-strategy/`, look the topic up per
+`skills/blog/references/content-strategy.md` first. On a match (in a draft
+cluster, tell the user first):
+- Take the primary and secondary keywords, template, cluster role, and gate
+  from the entry. Use the research below to validate them. List conflicts under
+  "Target Keywords"; do not replace the entry's keywords.
+- Fill "Internal Link Architecture" from the entry's resolved `links_to` and
+  `links_from`, and "Cluster position" from its role.
+- Save the brief as `seo-strategy/briefs/<entry slug>-brief.md`.
+
+On no match, say the topic is off-strategy and ask before continuing.
+
 Using WebSearch:
 1. Search for the target keyword; analyze what currently ranks
 2. Identify **primary keyword** (exact match target)
@@ -277,5 +289,6 @@ statistic for every section.
 
 ### Step 6: Save the Brief
 
-Save to the user's project as `briefs/[slug]-brief.md` or to a location
-they specify. Create the `briefs/` directory if it does not exist. Confirm the brief is ready for `/blog write`.
+Save to the user's project as `briefs/[slug]-brief.md` (or
+`seo-strategy/briefs/[slug]-brief.md` when the project has `seo-strategy/`),
+or to a location they specify. Create the `briefs/` directory if it does not exist. Confirm the brief is ready for `/blog write`.

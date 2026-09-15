@@ -1,12 +1,14 @@
 # Claude Blog - Blog Creation & Optimization Skill
 
+> Modeinspect fork of claude-blog. Read `FORK.md` first: what differs from upstream, how to install, tag, and merge upstream.
+
 ## Project Overview
 
 This repository contains **Claude Blog**, a Tier 4 Claude Code skill for blog content
 creation, optimization, and management. It follows the Agent Skills open standard and the
-3-layer architecture (directive, orchestration, execution). 32 skill directories
-(1 orchestrator + 31 sub-skills), 30 user-facing `/blog` commands, 5 specialized
-subagents, 12 content templates, and 22 reference docs are dual-optimized for Google rankings
+3-layer architecture (directive, orchestration, execution). 33 skill directories
+(1 orchestrator + 32 sub-skills), 30 user-facing `/blog` commands, 5 specialized
+subagents, 12 content templates, and 23 reference docs are dual-optimized for Google rankings
 (2026 core and spam update timeline, E-E-A-T) and AI citations (GEO/AEO). Includes FLOW framework
 integration, semantic topic-cluster planning + execution, multilingual publishing (Pro Hub
 Challenge v1.7.0), BRAND.md/VOICE.md/DISCOURSE.md project-root context auto-load (v1.8.0,
@@ -44,7 +46,7 @@ claude-blog/
   scripts/consistency_check.py       # Local reference + FLOW lock validation
   scripts/dependency_smoke.py        # Offline optional-runtime initialization checks
   scripts/validate_public_release.py # Read-only public worktree validation
-  skills/                            # 32 skill directories (1 orchestrator + 31 sub-skills)
+  skills/                            # 33 skill directories (1 orchestrator + 32 sub-skills)
     blog/SKILL.md                   # Main orchestrator, routing, scoring
       references/                   # 22 on-demand knowledge files (5 in v1.8.0, 1 in v1.9.0)
       templates/                    # 12 content templates

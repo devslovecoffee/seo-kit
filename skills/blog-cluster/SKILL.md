@@ -18,7 +18,7 @@ metadata:
   version: "2.2.0"
   category: blog
 user-invokable: true
-argument-hint: "[plan|execute] [seed-keyword|cluster-plan.json]"
+argument-hint: "[plan|execute] [seed-keyword|cluster-slug|cluster-plan.json]"
 ---
 
 # Blog Cluster (Semantic Topic Cluster Engine)
@@ -125,6 +125,14 @@ Verify every spoke has at least 2 incoming links. Count total planned interlinks
 
 ### Step 5. Generate output files
 
+**Project content strategy.** If the project root has `seo-strategy/`, cluster directories live inside it as `seo-strategy/cluster-<seed-keyword-slug>/`, holding only `cluster-plan.json`, `cluster-map.html`, and `cluster-scorecard.md`. Posts go to `seo-strategy/site.json` `content_dir`, never into the cluster directory.
+- **New cluster:** write the plan with `"status": "draft"`, and set it to `active` when the user approves it in Step 6.
+- **Existing cluster directory:** update its plan in place, following "Adding or adjusting clusters" in `skills/blog/references/content-strategy.md`. Show a change summary, keep user-authored fields, and never move a published slug without explicit approval.
+- **Every entry** needs a `slug`. Links to other clusters use `<cluster-slug>:<id>`.
+- **After writing,** run the validator, which also checks keyword collisions against every other cluster.
+
+The layout below applies when the project has no `seo-strategy/`.
+
 All plan and execute artifacts go into a single subdirectory of the current working directory. Canonicalize the output directory, refuse symlinks, and reject writes outside the cluster directory. Slugs must match lowercase letters, numbers, and hyphens only; reject absolute paths, `..`, path separators inside slugs, and hidden control characters.
 
 ```
@@ -218,11 +226,19 @@ Reference: `references/execution-workflow.md`
 
 ### Step 1. Load plan
 
-Read `cluster-plan.json` from the user-specified path or the most recent `cluster-*/cluster-plan.json` in the working directory. Validate JSON structure. If no plan exists, return: "No cluster plan found. Run `/blog cluster plan <seed-keyword>` first."
+If the project root has `seo-strategy/`, the plan is `seo-strategy/cluster-<slug>/cluster-plan.json`, selected by a `<cluster-slug>` argument. When the argument is omitted, ask which active cluster to execute. Refuse a plan whose `status` is `draft`, and tell the user to activate it first. Run `validate_content_strategy.py` per `skills/blog/references/content-strategy.md` and stop on errors. In this mode:
+- Posts whose target file already exists are published. Skip them, and list them in the scorecard with a `/blog rewrite <file>` command each.
+- Each written post goes to its target file, and its draft folder is `seo-strategy/drafts/<slug>/`.
+- Links point to entry `url`s, not filenames. Backward link injection (Step 5) replaces `[INTERNAL-LINK: <anchor> -> <url>]` markers with `[<anchor>](<url>)` in any post that links to the just-written one.
+- The scorecard goes to `seo-strategy/cluster-<slug>/cluster-scorecard.md`.
+
+Otherwise, read `cluster-plan.json` from the user-specified path or the most recent `cluster-*/cluster-plan.json` in the working directory. Validate JSON structure. If no plan exists, return: "No cluster plan found. Run `/blog cluster plan <seed-keyword>` first."
 
 Before reading a user-supplied plan path, canonicalize it relative to the current working directory. Reject absolute paths, `..`, symlinks, non-`cluster-plan.json` filenames, and any path outside the selected cluster directory. Constrain all generated post, image, map, and scorecard outputs to that cluster directory.
 
 ### Step 2. Determine execution order
+
+If the plan has `publish_order`, use that order (skipping published posts) instead of the rules below.
 
 1. Pillar page first (so spokes can link to a known filename).
 2. Then spokes, ordered by `(cluster priority, search_volume_estimate desc, post id alphabetical)`. Cluster priority is the sum of estimated volumes within the cluster (highest first).
@@ -249,7 +265,7 @@ Output format: standard markdown (`.md`) by default, matching `blog-write`'s def
 
 ### Step 4. Per-post optional hero image
 
-If `blog-image` is available, call `/blog image generate` via the Task tool to produce a 16:9 hero image for the post and place it in `cluster-<slug>/images/<post-slug>-hero.png`. Delegate provider selection to `blog-image`, prefer current Gemini image models when available, and record the model ID in the scorecard. If image generation is unavailable or fails, log a warning and continue without images. Image generation is non-blocking.
+Generate a hero image for the post with the `blog-openai-image` skill. Place it where the project's post images live, or in `cluster-<slug>/images/<post-slug>-hero.png` when the project has no `seo-strategy/`. Record the model ID in the scorecard. If `OPENAI_API_KEY` is missing, stop before the first post and tell the user.
 
 ### Step 5. Backward link injection
 

@@ -96,6 +96,8 @@ Ask:
 
 ## Output Files
 
+If the project root has `seo-strategy/`, write both files there (`seo-strategy/BRAND.md`, `seo-strategy/VOICE.md`) instead of the project root, and read them from there in `show` and `update`. See `skills/blog/references/content-strategy.md`.
+
 ### BRAND.md template
 
 Write to project root as:

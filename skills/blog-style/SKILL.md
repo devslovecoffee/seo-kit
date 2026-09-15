@@ -64,8 +64,8 @@ The learner aggregates the existing blog analyzer across each sample post:
 
 ## Consuming the Profile
 
-Drop the markdown block into project `VOICE.md` when the goal is durable
-project context. Blog-write can use the style baselines as drafting targets:
+Drop the markdown block into project `VOICE.md` (`seo-strategy/VOICE.md` when
+the project has `seo-strategy/`) when the goal is durable project context. Blog-write can use the style baselines as drafting targets:
 
 - Keep average sentence length near the learned mean.
 - Match the learned sentence variation unless the user asks for a tighter or
